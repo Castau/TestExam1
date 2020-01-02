@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -67,7 +68,24 @@ public class User implements Serializable {
         @JoinColumn(name = "role_name", referencedColumnName = "role_name")})
     @ManyToMany
     private List<Role> roleList = new ArrayList();
+    
+    @ManyToMany(mappedBy = "persons")
+    private List<Hobby> hobbies;
+    
+    @ManyToOne
+    private Address address;
 
+    public User() {
+    }
+    
+    public User(String userFirstName, String userLastName, String userPhone, String userEmail, String userPass) {
+        this.userFirstName = userFirstName;
+        this.userLastName = userLastName;
+        this.userPhone = userPhone;
+        this.userEmail = userEmail;
+        this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());
+    }
+    
     public List<String> getRolesAsStrings() {
         if (roleList.isEmpty()) {
             return null;
@@ -79,23 +97,12 @@ public class User implements Serializable {
         return rolesAsStrings;
     }
 
-    public User() {
-    }
-
     public boolean verifyPasswordNonHashed(String pw) {
         return (BCrypt.checkpw(pw, userPass));
     }
 
     public boolean verifyHashedPW(String pw) {
         return (pw.equals(this.userPass));
-    }
-
-    public User(String userFirstName, String userLastName, String userPhone, String userEmail, String userPass) {
-        this.userFirstName = userFirstName;
-        this.userLastName = userLastName;
-        this.userPhone = userPhone;
-        this.userEmail = userEmail;
-        this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());
     }
 
     public String getUserFirstName() {
