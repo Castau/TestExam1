@@ -6,20 +6,16 @@ import entities.User;
 import errorhandling.AuthenticationException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.ws.rs.WebApplicationException;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import utils.EMF_Creator.DbSelector;
 import utils.EMF_Creator.Strategy;
 
-//Uncomment the line below, to temporarily disable this test
 //@Disabled
 public class UserFacadeTest {
 
@@ -50,10 +46,10 @@ public class UserFacadeTest {
         facade = UserFacade.getUserFacade(emf);
 
         // SET UP USERS
-        user = new User("user", userPass);
-        admin = new User("admin", adminPass);
-        both = new User("both", bothPass);
-
+        user = new User("userFirst", "userLast", "00000000", "user@mail.dk", userPass);
+        admin = new User("adminFirst", "adminLast", "11111111", "admin@mail.dk", adminPass);
+        both = new User("bothFirst", "bothLast", "22222222", "both@mail.dk", bothPass);
+        
         // SET UP ROLES
         userRole = new Role("user");
         adminRole = new Role("admin");
@@ -65,13 +61,6 @@ public class UserFacadeTest {
         both.addRole(adminRole);
     }
 
-    @AfterAll
-    public static void tearDownClass() {
-        // Clean up database after test is done or use a persistence unit with drop-and-create to start up clean on every test
-    }
-
-    // Setup the DataBase in a known state BEFORE EACH TEST
-    // TODO -- Make sure to change the script below to use YOUR OWN entity class
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
@@ -83,16 +72,10 @@ public class UserFacadeTest {
         em.persist(admin);
         em.persist(both);
         em.getTransaction().commit();
-
-        System.out.println("USER HASH CHECK: " + user.getUserPass());
-        System.out.println("ADMIN HASH CHECK: " + admin.getUserPass());
-        System.out.println("BOTH HASH CHECK: " + both.getUserPass());
-        System.out.println("Created TEST Users");
     }
 
     @AfterEach
     public void tearDown() {
-        // Remove any data after each test was run
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
@@ -101,7 +84,6 @@ public class UserFacadeTest {
             em.getTransaction().commit();
         } catch (Exception e) {
             em.getTransaction().rollback();
-            System.out.println("Error in tearDown FacadeExampleTest. Message: " + e.getMessage());
         } finally {
             em.close();
         }
@@ -114,28 +96,19 @@ public class UserFacadeTest {
 
     @Test
     public void testVerifyUsers() throws AuthenticationException {
-        // Arrange 
         User expected = user;
-        // Act
-        String username = expected.getUserName();
-        User actual = facade.getVeryfiedUser(username, userPass);
-        // Assert
+        String userEmail = expected.getUserEmail();
+        User actual = facade.getVeryfiedUser(userEmail, userPass);
         assertEquals(expected, actual);
 
-        // Repeat for Admin
         expected = admin;
-        // Act
-        username = expected.getUserName();
-        actual = facade.getVeryfiedUser(username, adminPass);
-        // Assert
+        userEmail = expected.getUserEmail();
+        actual = facade.getVeryfiedUser(userEmail, adminPass);
         assertEquals(expected, actual);
 
-        // Repeat for Both
         expected = both;
-        // Act
-        username = expected.getUserName();
-        actual = facade.getVeryfiedUser(username, bothPass);
-        // Assert
+        userEmail = expected.getUserEmail();
+        actual = facade.getVeryfiedUser(userEmail, bothPass);
         assertEquals(expected, actual);
     }
 

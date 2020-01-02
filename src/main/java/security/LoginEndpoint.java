@@ -11,7 +11,6 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import entities.Role;
 import facades.UserFacade;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +25,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import errorhandling.AuthenticationException;
 import errorhandling.GenericExceptionMapper;
-import java.util.ArrayList;
 import javax.persistence.EntityManagerFactory;
 import utils.EMF_Creator;
 
@@ -42,14 +40,14 @@ public class LoginEndpoint {
   @Produces(MediaType.APPLICATION_JSON)
   public Response login(String jsonString) throws AuthenticationException {
     JsonObject json = new JsonParser().parse(jsonString).getAsJsonObject();
-    String username = json.get("username").getAsString();
+    String userEmail = json.get("userEmail").getAsString();
     String password = json.get("password").getAsString();
 
     try {
-      User user = USER_FACADE.getVeryfiedUser(username, password);
-      String token = createToken(username, user.getRolesAsStrings());
+      User user = USER_FACADE.getVeryfiedUser(userEmail, password);
+      String token = createToken(userEmail, user.getRolesAsStrings());
       JsonObject responseJson = new JsonObject();
-      responseJson.addProperty("username", username);
+      responseJson.addProperty("userEmail", userEmail);
       responseJson.addProperty("token", token);
       List<String> roles = user.getRolesAsStrings();
       responseJson.addProperty("roles", new Gson().toJson(roles));
@@ -61,10 +59,10 @@ public class LoginEndpoint {
       }
       Logger.getLogger(GenericExceptionMapper.class.getName()).log(Level.SEVERE, null, ex);
     }
-    throw new AuthenticationException("Invalid username or password! Please try again");
+    throw new AuthenticationException("Invalid user email or password! Please try again");
   }
 
-  private String createToken(String userName, List<String> roles) throws JOSEException {
+  private String createToken(String userEmail, List<String> roles) throws JOSEException {
 
     StringBuilder res = new StringBuilder();
     for (String string : roles) {
@@ -72,13 +70,13 @@ public class LoginEndpoint {
       res.append(",");
     }
     String rolesAsString = res.length() > 0 ? res.substring(0, res.length() - 1) : "";
-    String issuer = "HoldKrykke";
+    String issuer = "TestExam1";
 
     JWSSigner signer = new MACSigner(SharedSecret.getSharedKey());
     Date date = new Date();
     JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-            .subject(userName)
-            .claim("username", userName)
+            .subject(userEmail)
+            .claim("userEmail", userEmail)
             .claim("roles", rolesAsString)
             .claim("issuer", issuer)
             .issueTime(date)

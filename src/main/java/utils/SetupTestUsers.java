@@ -21,10 +21,12 @@ public class SetupTestUsers {
         System.out.println("-----------------------------");
         System.out.println("CHANGE DEFAULT PASSWORDS BEFORE PRODUCTION - SEE utils.SetupTestUsers.java");
         System.out.println("-----------------------------");
-        User user = new User("user", "user");
-        User admin = new User("admin", "admin");
-        User both = new User("both", "both");
+        User user = new User("userFirst", "userLast", "00000000", "user@mail.dk", "user");
+        User admin = new User("adminFirst", "adminLast", "11111111", "admin@mail.dk", "admin");
+        User both = new User("bothFirst", "bothLast", "22222222", "both@mail.dk", "both");
 
+
+        
         em.getTransaction().begin();
         Role userRole = new Role("user");
         Role adminRole = new Role("admin");

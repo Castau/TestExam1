@@ -107,7 +107,7 @@ public class EMF_Creator {
 
         //A test running on a different JVM can alter values to use via this property
         if (System.getProperty("IS_INTEGRATION_TEST_WITH_DB") != null) {
-            System.out.println("--------- IS_INTEGRATION_TEST_WITH_DB (Integration Test With DataBase --------------- ");
+            System.out.println("---------(Integration Test With DataBase --------------- ");
             connection_str = Settings.getTEST_DBConnection();
             user = System.getProperty("USER") != null ? System.getProperty("USER") : user;
             pw = System.getProperty("PW") != null ? System.getProperty("PW") : pw;
