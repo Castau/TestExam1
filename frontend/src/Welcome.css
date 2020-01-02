@@ -1,0 +1,18 @@
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+		monospace;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	padding: 0px 5px;
+	border: 1px solid #bcbec0;
+	background: #f1f3f5;
+	color: #111111;
+}
+
+.customBorder {
+	display: inline-block;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-right: 5px;
+}
