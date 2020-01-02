@@ -20,7 +20,7 @@ import utils.EMF_Creator;
  * @author lam@cphbusiness.dk
  */
 @Path("info")
-public class SWAPIRessource {
+public class DGS_Resource {
 
     private ApiFacade facade = new ApiFacade();
     private static EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);

@@ -9,12 +9,12 @@ import javax.persistence.NoResultException;
 /**
  * @author lam@cphbusiness.dk
  */
-public class UserFacade {
+public class Facade {
 
     private static EntityManagerFactory emf;
-    private static UserFacade instance;
+    private static Facade instance;
 
-    private UserFacade() {
+    private Facade() {
     }
 
     /**
@@ -22,10 +22,10 @@ public class UserFacade {
      * @param _emf
      * @return the instance of this facade.
      */
-    public static UserFacade getUserFacade(EntityManagerFactory _emf) {
+    public static Facade getUserFacade(EntityManagerFactory _emf) {
         if (instance == null) {
             emf = _emf;
-            instance = new UserFacade();
+            instance = new Facade();
         }
         return instance;
     }

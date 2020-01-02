@@ -17,10 +17,10 @@ import utils.EMF_Creator.DbSelector;
 import utils.EMF_Creator.Strategy;
 
 //@Disabled
-public class UserFacadeTest {
+public class FacadeTest {
 
     private static EntityManagerFactory emf;
-    private static UserFacade facade;
+    private static Facade facade;
 
     // USERS
     private static User user;
@@ -36,14 +36,14 @@ public class UserFacadeTest {
     private static final String adminPass = "admin";
     private static final String bothPass = "both";
 
-    public UserFacadeTest() {
+    public FacadeTest() {
     }
 
     @BeforeAll
     public static void setUpClass() {
         // SET UP CONNECTION AND FACADE
         emf = EMF_Creator.createEntityManagerFactory(DbSelector.TEST, Strategy.DROP_AND_CREATE);
-        facade = UserFacade.getUserFacade(emf);
+        facade = Facade.getUserFacade(emf);
 
         // SET UP USERS
         user = new User("userFirst", "userLast", "00000000", "user@mail.dk", userPass);
