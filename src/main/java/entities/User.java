@@ -24,8 +24,10 @@ import org.mindrot.jbcrypt.BCrypt;
 @Entity
 @Table(name = "users")
 @NamedQueries({
-    @NamedQuery(name = "User.deleteAllRows", query = "DELETE FROM User"), 
-    @NamedQuery(name = "User.getByEmail", query = "SELECT u FROM User u WHERE u.userEmail= :email")})
+    @NamedQuery(name = "User.deleteAllRows", query = "DELETE FROM User"),
+    @NamedQuery(name = "User.getByEmail", query = "SELECT u FROM User u WHERE u.userEmail= :email"),
+    @NamedQuery(name = "User.getByPhone", query = "SELECT u FROM User u WHERE u.userPhone= :phone"),
+    @NamedQuery(name = "User.getByID", query = "SELECT u FROM User u WHERE u.userID= :id")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -68,16 +70,16 @@ public class User implements Serializable {
         @JoinColumn(name = "role_name", referencedColumnName = "role_name")})
     @ManyToMany
     private List<Role> roleList = new ArrayList();
-    
+
     @ManyToMany(mappedBy = "persons")
     private List<Hobby> hobbies;
-    
+
     @ManyToOne
     private Address address;
 
     public User() {
     }
-    
+
     public User(String userFirstName, String userLastName, String userPhone, String userEmail, String userPass) {
         this.userFirstName = userFirstName;
         this.userLastName = userLastName;
@@ -85,7 +87,7 @@ public class User implements Serializable {
         this.userEmail = userEmail;
         this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());
     }
-    
+
     public List<String> getRolesAsStrings() {
         if (roleList.isEmpty()) {
             return null;
