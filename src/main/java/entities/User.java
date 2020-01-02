@@ -25,7 +25,7 @@ import org.mindrot.jbcrypt.BCrypt;
 @Table(name = "users")
 @NamedQueries({
     @NamedQuery(name = "User.deleteAllRows", query = "DELETE FROM User"), 
-    @NamedQuery(name = "User.getByEmail", query = "SELECT u FROM User u Where u.userEmail= :email")})
+    @NamedQuery(name = "User.getByEmail", query = "SELECT u FROM User u WHERE u.userEmail= :email")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;

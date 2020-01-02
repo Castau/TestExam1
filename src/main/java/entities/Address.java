@@ -19,13 +19,13 @@ import javax.validation.constraints.NotNull;
  *
  * @author Camilla
  */
-
 @Entity
 @Table(name = "addresses")
-//@NamedQueries({
-//    @NamedQuery(name = "Hobby.deleteAllRows", query = "DELETE FROM Hobby"), 
-//    @NamedQuery(name = "Hobby.all", query = "SELECT h FROM Hobby h")})
-public class Address implements Serializable{
+@NamedQueries({
+    @NamedQuery(name = "Address.deleteAllRows", query = "DELETE FROM Address"),
+    @NamedQuery(name = "Address.all", query = "SELECT a FROM Address a")})
+public class Address implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -42,12 +42,12 @@ public class Address implements Serializable{
     @NotNull
     @Column(name = "city", length = 25)
     private String city;
-    
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "zipcode", length = 4)
     private int zipcode;
-    
+
     @OneToMany(mappedBy = "address")
     private List<User> persons;
 
