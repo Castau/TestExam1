@@ -7,7 +7,7 @@ const Welcome = () => {
 	return (
 		<>
 		<br></br>
-		<h3>3. semester exam template project</h3>
+		<h3>Test exam 1 template project</h3>
 		</>
 	);
 };
