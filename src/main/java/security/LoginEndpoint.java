@@ -11,7 +11,7 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import facades.Facade;
+import facades.UserFacadeImpl;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -33,7 +33,7 @@ public class LoginEndpoint {
 
   public static final int TOKEN_EXPIRE_TIME = 1000 * 60 * 30; //30 min
   private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
-  public static final Facade USER_FACADE = Facade.getUserFacade(EMF);
+  public static final UserFacadeImpl USER_FACADE = UserFacadeImpl.getUserFacade(EMF);
   
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
