@@ -2,6 +2,7 @@ package facades;
 
 import entities.Hobby;
 import entities.User;
+import errorhandling.NotFoundException;
 
 /**
  *
@@ -9,15 +10,15 @@ import entities.User;
  */
 public interface AdminFacadeInterface {
     
-    public int addHobby();
+    public Hobby addHobby(Hobby hobby);
     
-    public Hobby editHobby();
+    public Hobby editHobby(Hobby hobby);
     
-    public int deleteHobby();
+    public Hobby deleteHobby(int id) throws NotFoundException;
     
-    public int addUser();
+    public User addUser(User user);
     
     public User editUser();
     
-    public int deleteUser();
+    public User deleteUser();
 }

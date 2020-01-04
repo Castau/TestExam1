@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -17,21 +18,20 @@ import utils.EMF_Creator.Strategy;
  *
  * @author Camilla
  */
-
 public class HobbyFacadeImplTest {
-    
+
     private static EntityManagerFactory emf;
     private static HobbyFacadeImpl facade;
-    
+
     public HobbyFacadeImplTest() {
     }
-    
+
     @BeforeAll
     public static void setUpClass() {
         emf = EMF_Creator.createEntityManagerFactory(DbSelector.TEST, Strategy.DROP_AND_CREATE);
         facade = HobbyFacadeImpl.getHobbyFacade(emf);
     }
-    
+
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
@@ -52,6 +52,20 @@ public class HobbyFacadeImplTest {
         }
     }
 
+    @AfterEach
+    public void tearDown() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
+        }
+    }
+
     @Test
     public void testGetAllHobbies() {
         List<Hobby> exp = new ArrayList<>();
@@ -62,5 +76,5 @@ public class HobbyFacadeImplTest {
         List<Hobby> res = facade.getAllHobbies();
         assertEquals(exp, res);
     }
-    
+
 }
