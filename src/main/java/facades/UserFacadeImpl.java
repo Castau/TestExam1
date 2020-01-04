@@ -4,14 +4,15 @@ import entities.User;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import errorhandling.AuthenticationException;
+import errorhandling.NotFoundException;
 import java.util.List;
 import javax.persistence.NoResultException;
 
 /**
- * 
+ *
  * @author Camilla
  */
-public class UserFacadeImpl implements UserFacadeInterface{
+public class UserFacadeImpl implements UserFacadeInterface {
 
     private static EntityManagerFactory emf;
     private static UserFacadeImpl instance;
@@ -19,16 +20,16 @@ public class UserFacadeImpl implements UserFacadeInterface{
     private UserFacadeImpl() {
     }
 
-    /**
-     * @param _emf
-     * @return the instance of this facade.
-     */
     public static UserFacadeImpl getUserFacade(EntityManagerFactory _emf) {
         if (instance == null) {
             emf = _emf;
             instance = new UserFacadeImpl();
         }
         return instance;
+    }
+
+    private EntityManager getEntityManager() {
+        return emf.createEntityManager();
     }
 
     @Override
@@ -50,25 +51,70 @@ public class UserFacadeImpl implements UserFacadeInterface{
     }
 
     @Override
-    public User getUserByID(int ID) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public User getUserByID(int ID) throws NotFoundException {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User user = em.find(User.class, ID);
+            em.getTransaction().commit();
+            if (user != null) {
+                return user;
+            } else {
+                throw new NotFoundException("No person with provided id found");
+            }
+        } finally {
+            em.close();
+        }
     }
 
     @Override
-    public User getUserByEmail(String email) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public User getUserByEmail(String email) throws NotFoundException {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User user = em.createNamedQuery("User.getByEmail", User.class).setParameter("email", email).getSingleResult();
+            em.getTransaction().commit();
+            if (user != null) {
+                return user;
+            } else {
+                throw new NotFoundException("No person with provided email found");
+            }
+        } finally {
+            em.close();
+        }
     }
 
     @Override
-    public List<User> getUsersByPhone(String phone) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<User> getUsersByPhone(String phone) throws NotFoundException {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            List<User> users = em.createNamedQuery("User.getByPhone", User.class).setParameter("phone", phone).getResultList();
+            em.getTransaction().commit();
+            if (users != null && !users.isEmpty()) {
+                return users;
+            } else {
+                throw new NotFoundException("No person with provided phone number found");
+            }
+        } finally {
+            em.close();
+        }
     }
 
     @Override
-    public List<User> getUsersByHobby(String HobbyName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<User> getUsersByHobby(String HobbyName) throws NotFoundException {
+         EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            List<User> users = em.createNamedQuery("User.getByHobby", User.class).setParameter("name", HobbyName).getResultList();
+            em.getTransaction().commit();
+            if (users != null && !users.isEmpty()) {
+                return users;
+            } else {
+                throw new NotFoundException("No person with provided hobby found");
+            }
+        } finally {
+            em.close();
+        }
     }
-    
-    
-
 }

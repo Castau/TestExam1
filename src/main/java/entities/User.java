@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,13 +22,19 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.mindrot.jbcrypt.BCrypt;
 
+/**
+ *
+ * @author Camilla
+ */
 @Entity
 @Table(name = "users")
 @NamedQueries({
     @NamedQuery(name = "User.deleteAllRows", query = "DELETE FROM User"),
     @NamedQuery(name = "User.getByEmail", query = "SELECT u FROM User u WHERE u.userEmail= :email"),
     @NamedQuery(name = "User.getByPhone", query = "SELECT u FROM User u WHERE u.userPhone= :phone"),
-    @NamedQuery(name = "User.getByID", query = "SELECT u FROM User u WHERE u.userID= :id")})
+    @NamedQuery(name = "User.getByID", query = "SELECT u FROM User u WHERE u.userID= :id"),
+    @NamedQuery(name = "User.getByHobby", query = "SELECT u FROM User u INNER JOIN u.hobbies h WHERE h.hobbyName= :name")
+})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -71,7 +78,11 @@ public class User implements Serializable {
     @ManyToMany
     private List<Role> roleList = new ArrayList();
 
-    @ManyToMany(mappedBy = "persons")
+    @JoinTable(name = "hobbies_users", joinColumns = {
+        @JoinColumn(name = "persons_user_ID", referencedColumnName = "user_ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "hobbies_hobby_ID", referencedColumnName = "hobby_ID")})
+
+    @ManyToMany
     private List<Hobby> hobbies;
 
     @ManyToOne
@@ -86,6 +97,7 @@ public class User implements Serializable {
         this.userPhone = userPhone;
         this.userEmail = userEmail;
         this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());
+        this.hobbies = new ArrayList();
     }
 
     public List<String> getRolesAsStrings() {
@@ -161,6 +173,26 @@ public class User implements Serializable {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
+    }
+
+    public List<Hobby> getHobbies() {
+        return hobbies;
+    }
+
+    public void addHobby(Hobby hobby) {
+        this.hobbies.add(hobby);
+    }
+    
+    public void setHobbies(List<Hobby> hobbies) {
+        this.hobbies = hobbies;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     @Override

@@ -44,7 +44,7 @@ public class Hobby implements Serializable{
     @Column(name = "hobby_description", length = 50)
     private String hobbyDescription;
     
-    @ManyToMany
+    @ManyToMany(mappedBy = "hobbies")
     private List<User> persons;
 
     public Hobby() {
