@@ -80,9 +80,8 @@ public class User implements Serializable {
     @JoinTable(name = "hobbies_users", joinColumns = {
         @JoinColumn(name = "persons_user_ID", referencedColumnName = "user_ID")}, inverseJoinColumns = {
         @JoinColumn(name = "hobbies_hobby_ID", referencedColumnName = "hobby_ID")})
-
     @ManyToMany
-    private List<Hobby> hobbies;
+    private List<Hobby> hobbies = new ArrayList();
 
     @ManyToOne
     private Address address;
@@ -96,7 +95,7 @@ public class User implements Serializable {
         this.userPhone = userPhone;
         this.userEmail = userEmail;
         this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());
-        this.hobbies = new ArrayList();
+//        this.hobbies = new ArrayList();
     }
 
     public List<String> getRolesAsStrings() {
@@ -241,7 +240,8 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "userID = " + userID + ", userFirstName = " + userFirstName + ", userLastName = " + userLastName + ", userPhone = " + userPhone + ", userEmail = " + userEmail + ", userPass = " + userPass + ", roleList = " + roleList;
+        return "User{" + "userID=" + userID + ", userFirstName=" + userFirstName + ", userLastName=" + userLastName + ", userPhone=" + userPhone + ", userEmail=" + userEmail + ", userPass=" + userPass + ", roleList=" + roleList + ", hobbies=" + hobbies + ", address=" + address + '}';
     }
+
 
 }

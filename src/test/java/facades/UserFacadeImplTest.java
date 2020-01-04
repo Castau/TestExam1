@@ -1,5 +1,6 @@
 package facades;
 
+import dataTransferObjects.UserDTO;
 import entities.Hobby;
 import utils.EMF_Creator;
 import entities.Role;
@@ -137,33 +138,33 @@ public class UserFacadeImplTest {
     
     @Test
     public void testGetUserByID() throws Exception {
-        User expected = user;
-        int userID = expected.getUserID();
-        User actual = facade.getUserByID(userID);
+        UserDTO expected = new UserDTO(user);
+        int userID = expected.getID();
+        UserDTO actual = facade.getUserByID(userID);
         assertEquals(expected, actual);
     }
     
     @Test
     public void testGetUserByEmail() throws Exception {
-        User expected = user;
-        String userEmail = expected.getUserEmail();
-        User actual = facade.getUserByEmail(userEmail);
+        UserDTO expected = new UserDTO(user);
+        String userEmail = expected.getEmail();
+        UserDTO actual = facade.getUserByEmail(userEmail);
         assertEquals(expected, actual);
     }
     
     @Test
     public void testGetUsersByPhone() throws Exception {
-        User expected = user;
-        String userPhone = expected.getUserPhone();
-        User actual = facade.getUsersByPhone(userPhone).get(0);
+        UserDTO expected = new UserDTO(user);
+        String userPhone = expected.getPhone();
+        UserDTO actual = facade.getUsersByPhone(userPhone).get(0);
         assertEquals(expected, actual);
     }
     
     @Test
     public void testGetUsersByHobby() throws Exception {
-        User expected = user;
+        UserDTO expected = new UserDTO(user);
         String hobbyName = expected.getHobbies().get(0).getHobbyName();
-        User actual = facade.getUsersByHobby(hobbyName).get(0);
+        UserDTO actual = facade.getUsersByHobby(hobbyName).get(0);
         assertEquals(expected, actual);
     }
 }

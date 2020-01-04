@@ -1,5 +1,6 @@
 package facades;
 
+import dataTransferObjects.UserDTO;
 import entities.User;
 import errorhandling.AuthenticationException;
 import errorhandling.NotFoundException;
@@ -13,11 +14,11 @@ public interface UserFacadeInterface {
         
     public User getVeryfiedUser(String userEmail, String password) throws AuthenticationException;
     
-    public User getUserByID(int ID) throws NotFoundException;
+    public UserDTO getUserByID(int ID) throws NotFoundException;
     
-    public User getUserByEmail(String email) throws NotFoundException;
+    public UserDTO getUserByEmail(String email) throws NotFoundException;
     
-    public List<User> getUsersByPhone(String phone) throws NotFoundException;
+    public List<UserDTO> getUsersByPhone(String phone) throws NotFoundException;
     
-    public List<User> getUsersByHobby(String HobbyName) throws NotFoundException;
+    public List<UserDTO> getUsersByHobby(String HobbyName) throws NotFoundException;
 }

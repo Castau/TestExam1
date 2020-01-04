@@ -1,10 +1,12 @@
 package facades;
 
+import dataTransferObjects.UserDTO;
 import entities.User;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import errorhandling.AuthenticationException;
 import errorhandling.NotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.NoResultException;
 
@@ -51,14 +53,12 @@ public class UserFacadeImpl implements UserFacadeInterface {
     }
 
     @Override
-    public User getUserByID(int ID) throws NotFoundException {
+    public UserDTO getUserByID(int ID) throws NotFoundException {
         EntityManager em = getEntityManager();
         try {
-            em.getTransaction().begin();
             User user = em.find(User.class, ID);
-            em.getTransaction().commit();
             if (user != null) {
-                return user;
+                return new UserDTO(user);
             } else {
                 throw new NotFoundException("No person with provided id found");
             }
@@ -68,14 +68,12 @@ public class UserFacadeImpl implements UserFacadeInterface {
     }
 
     @Override
-    public User getUserByEmail(String email) throws NotFoundException {
+    public UserDTO getUserByEmail(String email) throws NotFoundException {
         EntityManager em = getEntityManager();
         try {
-            em.getTransaction().begin();
             User user = em.createNamedQuery("User.getByEmail", User.class).setParameter("email", email).getSingleResult();
-            em.getTransaction().commit();
             if (user != null) {
-                return user;
+                return new UserDTO(user);
             } else {
                 throw new NotFoundException("No person with provided email found");
             }
@@ -85,14 +83,16 @@ public class UserFacadeImpl implements UserFacadeInterface {
     }
 
     @Override
-    public List<User> getUsersByPhone(String phone) throws NotFoundException {
+    public List<UserDTO> getUsersByPhone(String phone) throws NotFoundException {
         EntityManager em = getEntityManager();
         try {
-            em.getTransaction().begin();
             List<User> users = em.createNamedQuery("User.getByPhone", User.class).setParameter("phone", phone).getResultList();
-            em.getTransaction().commit();
             if (users != null && !users.isEmpty()) {
-                return users;
+                List<UserDTO> userDTOs = new ArrayList<>();
+                users.forEach((user) -> {
+                    userDTOs.add(new UserDTO(user));
+                });
+                return userDTOs;
             } else {
                 throw new NotFoundException("No person with provided phone number found");
             }
@@ -102,14 +102,16 @@ public class UserFacadeImpl implements UserFacadeInterface {
     }
 
     @Override
-    public List<User> getUsersByHobby(String HobbyName) throws NotFoundException {
-         EntityManager em = getEntityManager();
+    public List<UserDTO> getUsersByHobby(String HobbyName) throws NotFoundException {
+        EntityManager em = getEntityManager();
         try {
-            em.getTransaction().begin();
             List<User> users = em.createNamedQuery("User.getByHobby", User.class).setParameter("name", HobbyName).getResultList();
-            em.getTransaction().commit();
             if (users != null && !users.isEmpty()) {
-                return users;
+                List<UserDTO> userDTOs = new ArrayList<>();
+                users.forEach((user) -> {
+                    userDTOs.add(new UserDTO(user));
+                });
+                return userDTOs;
             } else {
                 throw new NotFoundException("No person with provided hobby found");
             }

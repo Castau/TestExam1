@@ -3,6 +3,7 @@ package dataTransferObjects;
 import entities.Address;
 import entities.Hobby;
 import entities.User;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,24 +18,21 @@ public class UserDTO {
     private String email;
     private String phone;
     private Address address;
-    private List<Hobby> hobbies;
+    private List<Hobby> hobbies = new ArrayList();
     
     public UserDTO(){
         
     }
 
     public UserDTO(User user){
+        
         this.ID = user.getUserID();
         this.firstName = user.getUserFirstName();
         this.lastName = user.getUserLastName();
         this.email = user.getUserEmail();
         this.phone = user.getUserPhone();
         this.address = user.getAddress();
-        if (user.getHobbies() != null) {
-            user.getHobbies().forEach((hobby) -> {
-                this.hobbies.add(new Hobby(hobby.getHobbyName(), hobby.getHobbyDescription()));
-            });
-        }
+        this.hobbies = user.getHobbies();
     }
 
     public int getID() {
@@ -140,6 +138,11 @@ public class UserDTO {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" + "ID=" + ID + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", phone=" + phone + ", address=" + address + ", hobbies=" + hobbies + '}';
     }
 
 }
