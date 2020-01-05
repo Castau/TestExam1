@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Basic;
@@ -23,7 +24,8 @@ import javax.validation.constraints.NotNull;
 @Table(name = "addresses")
 @NamedQueries({
     @NamedQuery(name = "Address.deleteAllRows", query = "DELETE FROM Address"),
-    @NamedQuery(name = "Address.all", query = "SELECT a FROM Address a")})
+    @NamedQuery(name = "Address.all", query = "SELECT a FROM Address a"),
+    @NamedQuery(name = "Address.specific", query = "SELECT a FROM Address a WHERE a.street= :street AND a.city= :city AND a.zipcode= :zipcode")})
 public class Address implements Serializable {
 
     @Id
@@ -46,19 +48,18 @@ public class Address implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "zipcode", length = 4)
-    private int zipcode;
+    private String zipcode;
 
     @OneToMany(mappedBy = "address")
-    private List<User> persons;
+    private List<User> persons = new ArrayList();
 
     public Address() {
     }
 
-    public Address(String street, String city, int zipcode, List<User> persons) {
+    public Address(String street, String city, String zipcode) {
         this.street = street;
         this.city = city;
         this.zipcode = zipcode;
-        this.persons = persons;
     }
 
     public int getAddressID() {
@@ -81,11 +82,11 @@ public class Address implements Serializable {
         this.city = city;
     }
 
-    public int getZipcode() {
+    public String getZipcode() {
         return zipcode;
     }
 
-    public void setZipcode(int zipcode) {
+    public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
     }
 
@@ -97,13 +98,17 @@ public class Address implements Serializable {
         this.persons = persons;
     }
 
+    public void addPersons(User user) {
+        persons.add(user);
+    }
+
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 23 * hash + Objects.hashCode(this.street);
-        hash = 23 * hash + Objects.hashCode(this.city);
-        hash = 23 * hash + this.zipcode;
-        hash = 23 * hash + Objects.hashCode(this.persons);
+        int hash = 5;
+        hash = 37 * hash + Objects.hashCode(this.street);
+        hash = 37 * hash + Objects.hashCode(this.city);
+        hash = 37 * hash + Objects.hashCode(this.zipcode);
+        hash = 37 * hash + Objects.hashCode(this.persons);
         return hash;
     }
 
@@ -119,13 +124,13 @@ public class Address implements Serializable {
             return false;
         }
         final Address other = (Address) obj;
-        if (this.zipcode != other.zipcode) {
-            return false;
-        }
         if (!Objects.equals(this.street, other.street)) {
             return false;
         }
         if (!Objects.equals(this.city, other.city)) {
+            return false;
+        }
+        if (!Objects.equals(this.zipcode, other.zipcode)) {
             return false;
         }
         if (!Objects.equals(this.persons, other.persons)) {
@@ -133,4 +138,10 @@ public class Address implements Serializable {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Address{" + "addressID=" + addressID + ", street=" + street + ", city=" + city + ", zipcode=" + zipcode + ", persons=" + persons + '}';
+    }
+
 }

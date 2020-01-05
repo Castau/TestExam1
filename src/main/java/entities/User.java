@@ -1,5 +1,6 @@
 package entities;
 
+import dataTransferObjects.UserDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +96,16 @@ public class User implements Serializable {
         this.userPhone = userPhone;
         this.userEmail = userEmail;
         this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());
-//        this.hobbies = new ArrayList();
+    }
+    
+    public User(UserDTO userDto){
+        this.userID = userDto.getID();
+        this.userFirstName = userDto.getFirstName();
+        this.userLastName = userDto.getLastName();
+        this.userPhone = userDto.getPhone();
+        this.userEmail = userDto.getEmail();
+        this.hobbies = userDto.getHobbies();
+        this.address = userDto.getAddress();
     }
 
     public List<String> getRolesAsStrings() {

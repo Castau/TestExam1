@@ -59,6 +59,10 @@ public class Hobby implements Serializable{
         return hobbyID;
     }
 
+    public void setHobbyID(int hobbyID) {
+        this.hobbyID = hobbyID;
+    }
+    
     public String getHobbyName() {
         return hobbyName;
     }

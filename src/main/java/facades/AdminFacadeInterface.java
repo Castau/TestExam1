@@ -1,5 +1,6 @@
 package facades;
 
+import dataTransferObjects.UserDTO;
 import entities.Hobby;
 import entities.User;
 import errorhandling.NotFoundException;
@@ -12,13 +13,13 @@ public interface AdminFacadeInterface {
     
     public Hobby addHobby(Hobby hobby);
     
-    public Hobby editHobby(Hobby hobby);
+    public Hobby editHobby(int id, String name, String description);
     
     public Hobby deleteHobby(int id) throws NotFoundException;
     
-    public User addUser(User user);
+    public UserDTO addUser(User user);
     
-    public User editUser();
+    public UserDTO editUser(UserDTO userDto);
     
     public User deleteUser();
 }
