@@ -5,9 +5,11 @@ import entities.Address;
 import entities.Hobby;
 import entities.User;
 import errorhandling.NotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 
 /**
  *
@@ -93,6 +95,12 @@ public class AdminFacadeImpl implements AdminFacadeInterface {
         }
     }
 
+    private List<Address> checkDublicateAddress(Address address, EntityManager em) {
+        List<Address> addressList = em.createNamedQuery("Address.specific", Address.class).setParameter("street", address.getStreet())
+                .setParameter("city", address.getCity()).setParameter("zipcode", address.getZipcode()).getResultList();
+        return addressList;
+    }
+
     @Override
     public UserDTO addUser(User user) {
         if (user != null && user.getAddress() != null
@@ -102,22 +110,16 @@ public class AdminFacadeImpl implements AdminFacadeInterface {
                 && user.getUserLastName() != null && !user.getUserLastName().isEmpty()
                 && user.getUserPhone() != null && !user.getUserPhone().isEmpty()
                 && user.getUserPass() != null && !user.getUserPass().isEmpty()) {
-            
+
             EntityManager em = getEntityManager();
             try {
                 em.getTransaction().begin();
-                List<Address> addressList = em.createNamedQuery("Address.specific", Address.class).setParameter("street", user.getAddress().getStreet())
-                        .setParameter("city", user.getAddress().getCity()).setParameter("zipcode", user.getAddress().getZipcode()).getResultList();
+                List<Address> addressList = checkDublicateAddress(user.getAddress(), em);
                 if (!addressList.isEmpty()) {
                     user.setAddress(addressList.get(0));
                 } else {
                     em.persist(user.getAddress());
                 }
-//                user.getHobbies().forEach((hobby) -> {
-//                    if (hobby.getHobbyID() == 0) {
-//                        em.persist(hobby);
-//                    }
-//                });
                 em.persist(user);
                 em.getTransaction().commit();
                 return new UserDTO(em.find(User.class, user.getUserID()));
@@ -144,19 +146,25 @@ public class AdminFacadeImpl implements AdminFacadeInterface {
             EntityManager em = getEntityManager();
             try {
                 User user = em.find(User.class, userDto.getID());
+                List<Address> addressList = checkDublicateAddress(userDto.getAddress(), em);
                 user.setUserFirstName(userDto.getFirstName());
                 user.setUserLastName(userDto.getLastName());
                 user.setUserPhone(userDto.getPhone());
-//                user.setUserEmail(userDto.getEmail());
-                user.setAddress(userDto.getAddress());
                 user.setHobbies(userDto.getHobbies());
+
                 em.getTransaction().begin();
+                if (!addressList.isEmpty()) {
+                    user.setAddress(addressList.get(0));
+                } else {
+                    user.setAddress(userDto.getAddress());
+                    em.persist(user.getAddress());
+                }
                 em.merge(user);
                 em.getTransaction().commit();
                 return new UserDTO(em.find(User.class, userDto.getID()));
             } catch (Exception e) {
                 em.getTransaction().rollback();
-                throw new IllegalArgumentException("Rollback of transaction editUser");
+                throw new IllegalArgumentException("Rollback of transaction editUser" + e);
             } finally {
                 em.close();
             }
@@ -166,8 +174,20 @@ public class AdminFacadeImpl implements AdminFacadeInterface {
     }
 
     @Override
-    public User deleteUser() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public UserDTO deleteUser(int id) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User user = em.find(User.class, id);
+            em.remove(user);
+            em.getTransaction().commit();
+            return new UserDTO(user);
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new IllegalArgumentException("Rollback of transaction deleteUser" + e);
+        } finally {
+            em.close();
+        }
     }
 
 }

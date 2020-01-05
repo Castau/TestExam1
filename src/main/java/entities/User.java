@@ -33,8 +33,9 @@ import org.mindrot.jbcrypt.BCrypt;
     @NamedQuery(name = "User.getByEmail", query = "SELECT u FROM User u WHERE u.userEmail= :email"),
     @NamedQuery(name = "User.getByPhone", query = "SELECT u FROM User u WHERE u.userPhone= :phone"),
     @NamedQuery(name = "User.getByID", query = "SELECT u FROM User u WHERE u.userID= :id"),
-    @NamedQuery(name = "User.getByHobby", query = "SELECT u FROM User u INNER JOIN u.hobbies h WHERE h.hobbyName= :name")
-})
+    @NamedQuery(name = "User.getByHobby", query = "SELECT u FROM User u INNER JOIN u.hobbies h WHERE h.hobbyName= :name"),
+    @NamedQuery(name = "User.all", query = "SELECT u FROM User u")})
+
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -97,8 +98,8 @@ public class User implements Serializable {
         this.userEmail = userEmail;
         this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());
     }
-    
-    public User(UserDTO userDto){
+
+    public User(UserDTO userDto) {
         this.userID = userDto.getID();
         this.userFirstName = userDto.getFirstName();
         this.userLastName = userDto.getLastName();
@@ -190,7 +191,7 @@ public class User implements Serializable {
     public void addHobby(Hobby hobby) {
         this.hobbies.add(hobby);
     }
-    
+
     public void setHobbies(List<Hobby> hobbies) {
         this.hobbies = hobbies;
     }
@@ -252,6 +253,5 @@ public class User implements Serializable {
     public String toString() {
         return "User{" + "userID=" + userID + ", userFirstName=" + userFirstName + ", userLastName=" + userLastName + ", userPhone=" + userPhone + ", userEmail=" + userEmail + ", userPass=" + userPass + ", roleList=" + roleList + ", hobbies=" + hobbies + ", address=" + address + '}';
     }
-
 
 }

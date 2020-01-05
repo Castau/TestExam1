@@ -35,6 +35,14 @@ public class UserDTO {
         this.hobbies = user.getHobbies();
     }
 
+    public UserDTO(int ID, String firstName, String lastName, String email, String phone) {
+        this.ID = ID;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+    }
+
     public int getID() {
         return ID;
     }

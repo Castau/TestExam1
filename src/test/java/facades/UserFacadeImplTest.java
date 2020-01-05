@@ -6,8 +6,12 @@ import utils.EMF_Creator;
 import entities.Role;
 import entities.User;
 import errorhandling.AuthenticationException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,12 +38,12 @@ public class UserFacadeImplTest {
     private static final String userPass = "user";
     private static final String adminPass = "admin";
     private static final String bothPass = "both";
-    
+
     private static Hobby hobby1;
     private static Hobby hobby2;
     private static Hobby hobby3;
     private static Hobby hobby4;
-    
+
     public UserFacadeImplTest() {
     }
 
@@ -51,7 +55,7 @@ public class UserFacadeImplTest {
         user = new User("userFirst", "userLast", "00000000", "user@mail.dk", userPass);
         admin = new User("adminFirst", "adminLast", "11111111", "admin@mail.dk", adminPass);
         both = new User("bothFirst", "bothLast", "22222222", "both@mail.dk", bothPass);
-        
+
         userRole = new Role("user");
         adminRole = new Role("admin");
 
@@ -59,12 +63,12 @@ public class UserFacadeImplTest {
         admin.addRole(adminRole);
         both.addRole(userRole);
         both.addRole(adminRole);
-        
+
         hobby1 = new Hobby("Fiskeri", "Til havs");
         hobby2 = new Hobby("Litteratur", "Om sand");
         hobby3 = new Hobby("Fyrstedømmer", "I Transylvanien");
         hobby4 = new Hobby("Jagt", "Kun sneglejagt");
-        
+
         user.addHobby(hobby1);
         user.addHobby(hobby2);
         admin.addHobby(hobby2);
@@ -87,7 +91,7 @@ public class UserFacadeImplTest {
         em.persist(admin);
         em.persist(both);
         em.getTransaction().commit();
-        
+
     }
 
     @AfterEach
@@ -135,7 +139,7 @@ public class UserFacadeImplTest {
             facade.getVeryfiedUser("WRONG", "WRONG");
         });
     }
-    
+
     @Test
     public void testGetUserByID() throws Exception {
         UserDTO expected = new UserDTO(user);
@@ -143,7 +147,7 @@ public class UserFacadeImplTest {
         UserDTO actual = facade.getUserByID(userID);
         assertEquals(expected, actual);
     }
-    
+
     @Test
     public void testGetUserByEmail() throws Exception {
         UserDTO expected = new UserDTO(user);
@@ -151,7 +155,7 @@ public class UserFacadeImplTest {
         UserDTO actual = facade.getUserByEmail(userEmail);
         assertEquals(expected, actual);
     }
-    
+
     @Test
     public void testGetUsersByPhone() throws Exception {
         UserDTO expected = new UserDTO(user);
@@ -159,12 +163,22 @@ public class UserFacadeImplTest {
         UserDTO actual = facade.getUsersByPhone(userPhone).get(0);
         assertEquals(expected, actual);
     }
-    
+
     @Test
     public void testGetUsersByHobby() throws Exception {
         UserDTO expected = new UserDTO(user);
         String hobbyName = expected.getHobbies().get(0).getHobbyName();
         UserDTO actual = facade.getUsersByHobby(hobbyName).get(0);
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testGetAllUsers() {
+        List<UserDTO> exp = new ArrayList<>();
+        exp.add(new UserDTO(0, "userFirst", "userLast", "user@mail.dk", "00000000"));
+        exp.add(new UserDTO(0, "adminFirst", "adminLast", "admin@mail.dk", "11111111"));
+        exp.add(new UserDTO(0, "bothFirst", "bothLast", "both@mail.dk", "22222222"));
+        List<UserDTO> res = facade.getAllUsers();
+        assertThat("List equality without order", res, containsInAnyOrder(exp.toArray()));
     }
 }

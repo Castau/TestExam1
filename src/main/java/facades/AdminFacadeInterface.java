@@ -21,5 +21,5 @@ public interface AdminFacadeInterface {
     
     public UserDTO editUser(UserDTO userDto);
     
-    public User deleteUser();
+    public UserDTO deleteUser(int id);
 }

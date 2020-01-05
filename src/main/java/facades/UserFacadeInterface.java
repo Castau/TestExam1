@@ -21,4 +21,6 @@ public interface UserFacadeInterface {
     public List<UserDTO> getUsersByPhone(String phone) throws NotFoundException;
     
     public List<UserDTO> getUsersByHobby(String HobbyName) throws NotFoundException;
+    
+    public List<UserDTO> getAllUsers();
 }

@@ -119,4 +119,21 @@ public class UserFacadeImpl implements UserFacadeInterface {
             em.close();
         }
     }
+    
+     @Override
+    public List<UserDTO> getAllUsers() {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            List<User> users = em.createNamedQuery("User.all", User.class).getResultList();
+            List<UserDTO> userDtos = new ArrayList();
+            for(User user : users){
+                userDtos.add(new UserDTO(user.getUserID(), user.getUserFirstName(), user.getUserLastName(), user.getUserEmail(), user.getUserPhone()));
+            }
+            em.getTransaction().commit();
+            return userDtos;
+        } finally {
+            em.close();
+        }
+    }
 }

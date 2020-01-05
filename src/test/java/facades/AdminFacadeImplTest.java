@@ -194,7 +194,7 @@ public class AdminFacadeImplTest {
         UserDTO result = facade.addUser(user);
         assertEquals(expResult, result);
     }
-    
+
     @Test
     public void testAddUserChangeHobby() {
         User user = new User("AddTestFirst", "AddTestLast", "00000000", "AddTest@mail.dk", "AddTestPass");
@@ -204,36 +204,67 @@ public class AdminFacadeImplTest {
         UserDTO result = facade.addUser(user);
         assertEquals(expResult, result);
     }
-    
+
     @Test
     public void testEditUser() {
         List<Hobby> newHobbies = new ArrayList();
-        newHobbies.add(new Hobby("HobbynameEdit", "HobbyDescriptionEdit"));
+        newHobbies.add(hobby3);
         UserDTO expResult = new UserDTO(user_1TesterFirst);
         expResult.setFirstName("editFirst");
         expResult.setLastName("editLast");
-//        expResult.setEmail("edit@mail.dk");
         expResult.setPhone("99999999");
-        expResult.setAddress(new Address("Street 0", "CityZero", "0000"));
-//        expResult.setAddress(new Address("Street 1", "CityOne", "1111"));
-//        expResult.setAddress(testaddress1);
+        expResult.setAddress(testaddress4);
         expResult.setHobbies(newHobbies);
-//        expResult.addHobby(hobby1);
-//        expResult.addHobby(new Hobby("Fiskeri", "Til havs"));
         UserDTO result = facade.editUser(expResult);
         assertEquals(expResult, result);
+    }
 
+    @Test
+    public void testEditUserNewAddress() {
+        List<Hobby> newHobbies = new ArrayList();
+        newHobbies.add(hobby3);
+        UserDTO expResult = new UserDTO(user_1TesterFirst);
+        expResult.setFirstName("editFirst");
+        expResult.setLastName("editLast");
+        expResult.setPhone("99999999");
+        expResult.setAddress(new Address("EditStreet 4", "EditCityThree", "9999"));
+        expResult.setHobbies(newHobbies);
+        UserDTO result = facade.editUser(expResult);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testEditUserDublicateAddress() {
+        List<Hobby> newHobbies = new ArrayList();
+        newHobbies.add(hobby3);
+        UserDTO expResult = new UserDTO(user_1TesterFirst);
+        expResult.setFirstName("editFirst");
+        expResult.setLastName("editLast");
+        expResult.setPhone("99999999");
+        expResult.setAddress(new Address("Street 1", "CityOne", "1111"));
+        expResult.setHobbies(newHobbies);
+        UserDTO result = facade.editUser(expResult);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testEditUserAddHobby() {
+        UserDTO expResult = new UserDTO(user_1TesterFirst);
+        expResult.setFirstName("editFirst");
+        expResult.setLastName("editLast");
+        expResult.setPhone("99999999");
+        expResult.setAddress(new Address("Street 1", "CityOne", "1111"));
+        expResult.getHobbies().add(hobby4);
+        UserDTO result = facade.editUser(expResult);
+        assertEquals(expResult, result);
     }
 
     @Test
     public void testDeleteUser() {
-//        System.out.println("deleteUser");
-//        AdminFacadeImpl instance = null;
-//        User expResult = null;
-//        User result = instance.deleteUser();
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
+        int idToDelete = HOBBYfacade.getAllHobbies().get(0).getHobbyID();
+        Hobby expResult = HOBBYfacade.getAllHobbies().get(0);
+        Hobby result = facade.deleteHobby(idToDelete);
+        assertEquals(expResult, result);
     }
 
 }
