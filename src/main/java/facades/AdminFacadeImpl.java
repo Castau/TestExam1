@@ -181,7 +181,7 @@ public class AdminFacadeImpl implements AdminFacadeInterface {
             User user = em.find(User.class, id);
             em.remove(user);
             em.getTransaction().commit();
-            return new UserDTO(user);
+            return new UserDTO(user.getUserID(), user.getUserFirstName(), user.getUserLastName(), user.getUserEmail(), user.getUserPhone());
         } catch (Exception e) {
             em.getTransaction().rollback();
             throw new IllegalArgumentException("Rollback of transaction deleteUser" + e);

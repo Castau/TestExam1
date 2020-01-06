@@ -26,6 +26,7 @@ public class AdminFacadeImplTest {
     private static EntityManagerFactory emf;
     private static AdminFacadeImpl facade;
     private static HobbyFacadeImpl HOBBYfacade;
+    private static UserFacadeImpl USERfacade;
 
     private static User user_1TesterFirst;
     private static User admin_2TesterFirst;
@@ -59,6 +60,7 @@ public class AdminFacadeImplTest {
         emf = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.TEST, EMF_Creator.Strategy.DROP_AND_CREATE);
         facade = AdminFacadeImpl.getAdminFacade(emf);
         HOBBYfacade = HobbyFacadeImpl.getHobbyFacade(emf);
+        USERfacade = UserFacadeImpl.getUserFacade(emf);
 
         user_1TesterFirst = new User("1TesterFirst", "1TesterLast", "11111111", "1TesterFirst@mail.dk", userPass);
         admin_2TesterFirst = new User("2TesterFirst", "2TesterLast", "22222222", "2TesterFirst@mail.dk", adminPass);
@@ -261,9 +263,9 @@ public class AdminFacadeImplTest {
 
     @Test
     public void testDeleteUser() {
-        int idToDelete = HOBBYfacade.getAllHobbies().get(0).getHobbyID();
-        Hobby expResult = HOBBYfacade.getAllHobbies().get(0);
-        Hobby result = facade.deleteHobby(idToDelete);
+        int idToDelete = USERfacade.getAllUsers().get(0).getID();
+        UserDTO expResult = USERfacade.getAllUsers().get(0);
+        UserDTO result = facade.deleteUser(idToDelete);
         assertEquals(expResult, result);
     }
 
