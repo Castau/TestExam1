@@ -25,14 +25,13 @@ public class UserDTO {
     }
 
     public UserDTO(User user){
-        
+        this.hobbies = user.getHobbies();
         this.ID = user.getUserID();
         this.firstName = user.getUserFirstName();
         this.lastName = user.getUserLastName();
         this.email = user.getUserEmail();
         this.phone = user.getUserPhone();
         this.address = user.getAddress();
-        this.hobbies = user.getHobbies();
     }
 
     public UserDTO(int ID, String firstName, String lastName, String email, String phone) {

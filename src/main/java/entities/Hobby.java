@@ -50,6 +50,12 @@ public class Hobby implements Serializable{
     public Hobby() {
     }
 
+    public Hobby(Hobby hobby) {
+        this.hobbyName = hobby.hobbyName;
+        this.hobbyDescription = hobby.hobbyDescription;
+        this.hobbyID = hobby.hobbyID;
+    }
+    
     public Hobby(String hobbyName, String hobbyDescription) {
         this.hobbyName = hobbyName;
         this.hobbyDescription = hobbyDescription;

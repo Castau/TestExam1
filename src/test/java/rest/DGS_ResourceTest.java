@@ -19,6 +19,7 @@ import javax.ws.rs.core.UriBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import static org.hamcrest.Matchers.equalTo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +32,7 @@ import utils.EMF_Creator;
  *
  * @author Camilla
  */
+//@Disabled
 public class DGS_ResourceTest {
 
     public DGS_ResourceTest() {
@@ -207,66 +209,61 @@ public class DGS_ResourceTest {
         given().when().get("/DGS").then().statusCode(200);
     }
 
-    /**
-     * Test of getInfoForAll method, of class DGS_Resource.
-     */
     @Test
     public void testGetInfoForAll() {
-        System.out.println("getInfoForAll");
-        DGS_Resource instance = new DGS_Resource();
-        String expResult = "";
-        String result = instance.getInfoForAll();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        given()
+                .contentType("application/json")
+                .when()
+                .get("/DGS").then()
+                .statusCode(200)
+                .body("msg", equalTo("Hello anonymous"));
     }
 
-    /**
-     * Test of allUsers method, of class DGS_Resource.
-     */
     @Test
     public void testAllUsers() {
-        System.out.println("allUsers");
-        DGS_Resource instance = new DGS_Resource();
-        String expResult = "";
-        String result = instance.allUsers();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        given()
+                .contentType("application/json")
+                .when()
+                .get("/DGS/all").then()
+                .statusCode(200)
+                .body("msg", equalTo("Amount of users: 6"));
     }
 
-    /**
-     * Test of getFromUser method, of class DGS_Resource.
-     */
     @Test
     public void testGetFromUser() {
-        System.out.println("getFromUser");
-        DGS_Resource instance = new DGS_Resource();
-        String expResult = "";
-        String result = instance.getFromUser();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        login("4TesterFirst@mail.dk", "user");
+        given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .when()
+                .get("/DGS/hello").then()
+                .statusCode(200)
+                .body("msg", equalTo("Hello to User: 4TesterFirst@mail.dk"));
     }
 
-    /**
-     * Test of getUserByID method, of class DGS_Resource.
-     */
     @Test
     public void testGetUserByID() throws Exception {
-        System.out.println("getUserByID");
-        int userid = 0;
-        DGS_Resource instance = new DGS_Resource();
-        UserDTO expResult = null;
-        UserDTO result = instance.getUserByID(userid);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        int userID = USERfacade.getUserByEmail("1TesterFirst@mail.dk").getID();
+        login("4TesterFirst@mail.dk", "user");
+        given()
+                .contentType("application/json")
+                .header("x-access-token", securityToken)
+                .when()
+                .get("/DGS/id/" + userID).then()
+                .statusCode(200)
+                .body("firstName", equalTo("1TesterFirst"))
+                .body("lastName", equalTo("1TesterLast"))
+                .body("email", equalTo("1TesterFirst@mail.dk"))
+                .body("hobbies[0].hobbyDescription", equalTo("Til havs"))
+                .body("hobbies[0].hobbyName", equalTo("Fiskeri"))
+                .body("hobbies[1].hobbyDescription", equalTo("I Transylvanien"))
+                .body("hobbies[1].hobbyName", equalTo("Fyrstedømmer"))
+                .body("address.street", equalTo("Street 1"))
+                .body("address.city", equalTo("CityOne"))
+                .body("address.zipcode", equalTo("1111"))
+                .body("phone", equalTo("11111111"));
     }
 
-    /**
-     * Test of getUserByEmail method, of class DGS_Resource.
-     */
     @Test
     public void testGetUserByEmail() throws Exception {
         System.out.println("getUserByEmail");

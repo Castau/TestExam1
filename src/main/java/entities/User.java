@@ -8,6 +8,7 @@ import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -76,13 +77,15 @@ public class User implements Serializable {
     @JoinTable(name = "user_roles", joinColumns = {
         @JoinColumn(name = "user_email", referencedColumnName = "user_email")}, inverseJoinColumns = {
         @JoinColumn(name = "role_name", referencedColumnName = "role_name")})
-    @ManyToMany
+    @ManyToMany 
+        //(fetch = FetchType.EAGER)
     private List<Role> roleList = new ArrayList();
 
     @JoinTable(name = "hobbies_users", joinColumns = {
         @JoinColumn(name = "persons_user_ID", referencedColumnName = "user_ID")}, inverseJoinColumns = {
         @JoinColumn(name = "hobbies_hobby_ID", referencedColumnName = "hobby_ID")})
-    @ManyToMany
+    @ManyToMany 
+        //(fetch = FetchType.EAGER)
     private List<Hobby> hobbies = new ArrayList();
 
     @ManyToOne
