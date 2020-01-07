@@ -33,7 +33,7 @@ import utils.EMF_Creator;
  *
  * @author Camilla
  */
-//@Disabled
+@Disabled
 public class DGS_ResourceTest {
 
     public DGS_ResourceTest() {
