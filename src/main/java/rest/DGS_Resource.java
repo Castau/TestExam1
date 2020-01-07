@@ -26,42 +26,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import utils.EMF_Creator;
 
-
-@Path("dgs")
+@Path("DGS")
 public class DGS_Resource {
+
     // CHANGE TO TEST
     private static EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
     private static AdminFacadeImpl ADMINfacade = AdminFacadeImpl.getAdminFacade(EMF);
     private static HobbyFacadeImpl HOBBYfacade = HobbyFacadeImpl.getHobbyFacade(EMF);
     private static UserFacadeImpl USERfacade = UserFacadeImpl.getUserFacade(EMF);
 
-    private static User user_1TesterFirst;
-    private static User admin_2TesterFirst;
-    private static User both_3TesterFirst;
-    private static User user_4TesterFirst;
-    private static User admin_5TesterFirst;
-    private static User both_6TesterFirst;
-
-    private static Address testaddress1;
-    private static Address testaddress2;
-    private static Address testaddress3;
-    private static Address testaddress4;
-
-    private static Role userRole;
-    private static Role adminRole;
-
-    private static final String userPass = "user";
-    private static final String adminPass = "admin";
-    private static final String bothPass = "both";
-
-    private static Hobby hobby1;
-    private static Hobby hobby2;
-    private static Hobby hobby3;
-    private static Hobby hobby4;
-    
     @Context
     SecurityContext securityContext;
-    
+
 //    ALL
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -78,7 +54,6 @@ public class DGS_Resource {
         return "{\"msg\": \"Amount of users: " + users.size() + "\"}";
     }
 
-    
 //    USERS
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -97,7 +72,7 @@ public class DGS_Resource {
         UserDTO userbyid = USERfacade.getUserByID(userid);
         return userbyid;
     }
-    
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("email")
@@ -106,7 +81,7 @@ public class DGS_Resource {
         UserDTO userbyemail = USERfacade.getUserByEmail(useremail);
         return userbyemail;
     }
-    
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("phone")
@@ -115,7 +90,7 @@ public class DGS_Resource {
         List<UserDTO> usersbyphone = USERfacade.getUsersByPhone(userphone);
         return usersbyphone;
     }
-    
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("hobby")
@@ -124,7 +99,7 @@ public class DGS_Resource {
         List<UserDTO> usersbyhobby = USERfacade.getUsersByHobby(userhobby);
         return usersbyhobby;
     }
-    
+
 //    ADMINS
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -143,7 +118,7 @@ public class DGS_Resource {
         List<UserDTO> users = USERfacade.getAllUsers();
         return users;
     }
-    
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -153,7 +128,7 @@ public class DGS_Resource {
         Hobby added = ADMINfacade.addHobby(hobby);
         return added;
     }
-    
+
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -163,7 +138,7 @@ public class DGS_Resource {
         Hobby edited = ADMINfacade.editHobby(hobby.getHobbyID(), hobby.getHobbyName(), hobby.getHobbyDescription());
         return edited;
     }
-    
+
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -173,7 +148,7 @@ public class DGS_Resource {
         Hobby deleted = ADMINfacade.deleteHobby(id);
         return deleted;
     }
-    
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -183,7 +158,7 @@ public class DGS_Resource {
         UserDTO added = ADMINfacade.addUser(user);
         return added;
     }
-    
+
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -193,7 +168,7 @@ public class DGS_Resource {
         UserDTO edited = ADMINfacade.editUser(userDto);
         return edited;
     }
-    
+
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -203,7 +178,7 @@ public class DGS_Resource {
         UserDTO deleted = ADMINfacade.deleteUser(id);
         return deleted;
     }
-    
+
 //    BOTH
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -213,7 +188,7 @@ public class DGS_Resource {
         String thisuser = securityContext.getUserPrincipal().getName();
         return "{\"msg\": \"Hello to (admin OR user, but not a nobody) User: " + thisuser + "\"}";
     }
-    
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("hobbies")
@@ -234,26 +209,26 @@ public class DGS_Resource {
         String thisuser = securityContext.getUserPrincipal().getName();
         return "{\"msg\": \"Hello to (superuser) User: " + thisuser + "\"}";
     }
-    
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("data")
     public String data() {
-        ADMINfacade = AdminFacadeImpl.getAdminFacade(EMF);
-        HOBBYfacade = HobbyFacadeImpl.getHobbyFacade(EMF);
-        USERfacade = UserFacadeImpl.getUserFacade(EMF);
+        String userPass = "user";
+        String adminPass = "admin";
+        String bothPass = "both";
 
-        user_1TesterFirst = new User("1TesterFirst", "1TesterLast", "11111111", "1TesterFirst@mail.dk", userPass);
-        admin_2TesterFirst = new User("2TesterFirst", "2TesterLast", "22222222", "2TesterFirst@mail.dk", adminPass);
-        both_3TesterFirst = new User("3TesterFirst", "3TesterLast", "33333333", "3TesterFirst@mail.dk", bothPass);
-        user_4TesterFirst = new User("4TesterFirst", "4TesterLast", "44444444", "4TesterFirst@mail.dk", userPass);
-        admin_5TesterFirst = new User("5TesterFirst", "5TesterLast", "55555555", "5TesterFirst@mail.dk", adminPass);
-        both_6TesterFirst = new User("6TesterFirst", "6TesterLast", "66666666", "6TesterFirst@mail.dk", bothPass);
+        User user_1TesterFirst = new User("1TesterFirst", "1TesterLast", "11111111", "1TesterFirst@mail.dk", userPass);
+        User admin_2TesterFirst = new User("2TesterFirst", "2TesterLast", "22222222", "2TesterFirst@mail.dk", adminPass);
+        User both_3TesterFirst = new User("3TesterFirst", "3TesterLast", "33333333", "3TesterFirst@mail.dk", bothPass);
+        User user_4TesterFirst = new User("4TesterFirst", "4TesterLast", "44444444", "4TesterFirst@mail.dk", userPass);
+        User admin_5TesterFirst = new User("5TesterFirst", "5TesterLast", "55555555", "5TesterFirst@mail.dk", adminPass);
+        User both_6TesterFirst = new User("6TesterFirst", "6TesterLast", "66666666", "6TesterFirst@mail.dk", bothPass);
 
-        testaddress1 = new Address("Street 1", "CityOne", "1111");
-        testaddress2 = new Address("Street 2", "CityTwo", "1111");
-        testaddress3 = new Address("Street 3", "CityOne", "1111");
-        testaddress4 = new Address("Street 4", "CityThree", "1111");
+        Address testaddress1 = new Address("Street 1", "CityOne", "1111");
+        Address testaddress2 = new Address("Street 2", "CityTwo", "1111");
+        Address testaddress3 = new Address("Street 3", "CityOne", "1111");
+        Address testaddress4 = new Address("Street 4", "CityThree", "1111");
 
         user_1TesterFirst.setAddress(testaddress1);
         admin_2TesterFirst.setAddress(testaddress1);
@@ -262,8 +237,8 @@ public class DGS_Resource {
         admin_5TesterFirst.setAddress(testaddress3);
         both_6TesterFirst.setAddress(testaddress4);
 
-        userRole = new Role("user");
-        adminRole = new Role("admin");
+        Role userRole = new Role("user");
+        Role adminRole = new Role("admin");
 
         user_1TesterFirst.addRole(userRole);
         admin_2TesterFirst.addRole(adminRole);
@@ -274,10 +249,10 @@ public class DGS_Resource {
         both_6TesterFirst.addRole(userRole);
         both_6TesterFirst.addRole(adminRole);
 
-        hobby1 = new Hobby("Fiskeri", "Til havs");
-        hobby2 = new Hobby("Litteratur", "Om sand");
-        hobby3 = new Hobby("Fyrstedømmer", "I Transylvanien");
-        hobby4 = new Hobby("Jagt", "Kun sneglejagt");
+        Hobby hobby1 = new Hobby("Fiskeri", "Til havs");
+        Hobby hobby2 = new Hobby("Litteratur", "Om sand");
+        Hobby hobby3 = new Hobby("Fyrstedømmer", "I Transylvanien");
+        Hobby hobby4 = new Hobby("Jagt", "Kun sneglejagt");
 
         user_1TesterFirst.addHobby(hobby1);
         admin_2TesterFirst.addHobby(hobby2);
@@ -291,27 +266,40 @@ public class DGS_Resource {
         user_4TesterFirst.addHobby(hobby2);
         admin_5TesterFirst.addHobby(hobby1);
         both_6TesterFirst.addHobby(hobby3);
-        
+
         EntityManager em = EMF.createEntityManager();
-        em.getTransaction().begin();
-        em.persist(userRole);
-        em.persist(adminRole);
-        em.persist(hobby1);
-        em.persist(hobby2);
-        em.persist(hobby3);
-        em.persist(hobby4);
-        em.persist(testaddress1);
-        em.persist(testaddress2);
-        em.persist(testaddress3);
-        em.persist(testaddress4);
-        em.persist(user_1TesterFirst);
-        em.persist(admin_2TesterFirst);
-        em.persist(both_3TesterFirst);
-        em.persist(user_4TesterFirst);
-        em.persist(admin_5TesterFirst);
-        em.persist(both_6TesterFirst);
-        em.getTransaction().commit();
-        
+        try {
+            em.getTransaction().begin();
+            em.createNamedQuery("User.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Role.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Address.deleteAllRows").executeUpdate();
+            em.getTransaction().commit();
+
+            em.getTransaction().begin();
+            em.persist(userRole);
+            em.persist(adminRole);
+            em.persist(hobby1);
+            em.persist(hobby2);
+            em.persist(hobby3);
+            em.persist(hobby4);
+            em.persist(testaddress1);
+            em.persist(testaddress2);
+            em.persist(testaddress3);
+            em.persist(testaddress4);
+            em.persist(user_1TesterFirst);
+            em.persist(admin_2TesterFirst);
+            em.persist(both_3TesterFirst);
+            em.persist(user_4TesterFirst);
+            em.persist(admin_5TesterFirst);
+            em.persist(both_6TesterFirst);
+            em.getTransaction().commit();
+
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
+        }
         return "{\"msg\": \"Data Created\"}";
     }
 }
