@@ -9,7 +9,7 @@ cache:
     - $HOME/.m2
 
 script:
-  - mvn clean test -Dremote.user=$REMOTE_USER -Dremote.password=$REMOTE_PW tomcat7:deploy
+  - mvn clean test -e -Dremote.user=$REMOTE_USER -Dremote.password=$REMOTE_PW tomcat7:deploy
 services:
    - mysql
 
